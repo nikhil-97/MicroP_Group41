@@ -149,9 +149,11 @@ if __name__ == '__main__':
 			print "Are you sure you want to exit ?"
 			if(receive_data(accept_details)=='q'):
 				blinky(indicator_pin,6,0.15)
-				gpio.cleanup()	
-				exit()
+				break
 			else:
 				continue
 		else:
 			move(data)
+	gpio.cleanup()	
+	exit()
+
