@@ -1,4 +1,4 @@
-### IMPORTANT. DO NOT PROCEED WITHOUT READING ###
+### IMPORTANT. DO NOT PROCEED WITHOUT READING. ###
 ### DO NOT TOUCH THE CODE UNLESS AUTHORIZED. IF YOU ARE MAKING ANY CHANGES, COMMENT THE CHANGELOG BELOW
 # This code is for the Microprocessors project by Group 41.
 # It involves manually controlling the robot through bluetooth.
