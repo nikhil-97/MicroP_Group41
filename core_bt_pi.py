@@ -26,27 +26,11 @@ def setup(lu_pinno,ll_pinno,ru_pinno,rl_pinno):
 	gpio.output(right_lower,gpio.LOW)
 	return
 
-def find_nearby_devices():
-	devices = bt.discover_devices()
-	i=1
-	devices_data = dict()
-	if(devices!=None):
-		print 'Devices found : '
-		for dev in devices:
-			device_name = bt.lookup_name(dev)
-			devices_data.update({str(i):(device_name,dev)})
-			print '[%s] %s %s'%(i,device_name,dev)
-			i=i+1
-		connect_to_whom=raw_input('Select index of device to connect []')
-		return devices_data[connect_to_whom]
-	else:
-		return None
-
 def bind_and_listen(sock):
 #	print bt.get_available_port(bt.RFCOMM)
 	port = 1
 	sock.bind(("",port))
-	print 'The Darth RasPi is now listening to you. Connect to the Dark Lord'
+	print 'The RasPi is now listening to you.'
 	blinky(indicator_pin,3,0.35)
 
 	sock.listen(1)
@@ -117,6 +101,7 @@ def move(data):
 	elif(data=='v'):
 		vacuum_on()
 	else:
+		print 'Not a valid command'
 		return
 
 def blinky(pinno,count,delay):
@@ -137,7 +122,8 @@ if __name__ == '__main__':
 	gpio.setup(indicator_pin,gpio.OUT)	
 	socket = bt.BluetoothSocket(bt.RFCOMM)
         accept_details = bind_and_listen(socket)
-	print accept_details
+	if( accept_details!=None):
+		print 'Connected'
 
 	while True:
 		gpio.output(indicator_pin,gpio.HIGH)
