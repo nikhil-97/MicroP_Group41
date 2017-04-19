@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    tools:context="com.example.vyesh.bluetoothconn.ControllerActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LEFT"
+        android:id="@+id/left_btn"
+        android:layout_weight="0.05"
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:onClick="move"
+        android:tag="l"
+        android:layout_marginTop="137dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/vac_btn_on" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Right"
+        android:id="@+id/right_btn"
+        android:clickable="true"
+        android:onClick="move"
+        android:tag="r"
+        android:layout_above="@+id/backward_btn"
+        android:layout_toEndOf="@+id/backward_btn" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STOP"
+        android:id="@+id/stop_btn"
+        android:clickable="true"
+        android:onClick="move"
+        android:tag="s"
+        android:layout_above="@+id/backward_btn"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FORWARD"
+        android:id="@+id/forward_btn"
+        android:clickable="true"
+        android:onClick="move"
+        android:tag="f"
+        android:layout_above="@+id/stop_btn"
+        android:layout_alignEnd="@+id/stop_btn" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BACKWARD"
+        android:id="@+id/backward_btn"
+        android:clickable="true"
+        android:onClick="move"
+        android:tag="b"
+        android:layout_below="@+id/left_btn"
+        android:layout_alignStart="@+id/stop_btn" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VACuUM ON"
+        android:id="@+id/vac_btn_on"
+        android:clickable="true"
+        android:onClick="move"
+        android:tag="v"
+        android:layout_above="@+id/vac_btn_off"
+        android:layout_toStartOf="@+id/forward_btn" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VACUUM OFF"
+        android:id="@+id/vac_btn_off"
+        android:clickable="true"
+        android:onClick="move"
+        android:tag="o"
+        android:layout_marginBottom="79dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/backward_btn" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QUIT"
+        android:id="@+id/quit_btn"
+        android:layout_alignStart="@+id/right_btn"
+        android:layout_alignBottom="@+id/vac_btn_off"
+        android:clickable="true"
+        android:onClick="move"
+        android:tag="q"/>
+</RelativeLayout>
