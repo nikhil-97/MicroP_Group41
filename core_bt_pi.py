@@ -118,8 +118,7 @@ def blinky(pinno,count,delay):
 	time.sleep(delay)
 	gpio.output(pinno,gpio.LOW)
 	time.sleep(delay)
-	count=count-1
-	return blinky(pinno,count,delay)
+	return blinky(pinno,count-1,delay)
 
 if __name__ == '__main__':
 
