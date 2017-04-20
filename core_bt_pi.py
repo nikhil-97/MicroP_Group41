@@ -31,7 +31,7 @@ def bind_and_listen(sock):
 	port = 1
 	sock.bind(("",port))
 	print 'The RasPi is now listening to you.'
-	blinky(indicator_pin,3,0.35)
+	blinky(indicator_pin,3,0.2)
 
 	sock.listen(1)
 
@@ -84,8 +84,12 @@ def stay():
 def vacuum_on():
 	print 'Vacuum on'
 	#for now
-	return 
+	return
 
+def vacuum_off():
+	print 'Vacuum off'
+	#for now
+	return 
 	
 def move(data):
 	if(data=='f'):
@@ -100,6 +104,8 @@ def move(data):
 		stay()
 	elif(data=='v'):
 		vacuum_on()
+	elif(data=='o'):
+		vacuum_off()
 	else:
 		print 'Not a valid command'
 		return
@@ -133,6 +139,7 @@ if __name__ == '__main__':
 		if(data=='q'):
 			stay()
 			print "Are you sure you want to exit ?"
+			blinky(indicator_pin,2,0.2)
 			if(receive_data(accept_details)=='q'):
 				blinky(indicator_pin,6,0.15)
 				break
