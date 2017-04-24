@@ -6,6 +6,7 @@
 import RPi.GPIO as gpio
 ## We need to import RPi.GPIO library to access the GPIO pins on the Pi.
 import bluetooth as bt
+## Documentation for this library at - http://htmlpreview.github.io/?https://github.com/karulis/pybluez/blob/master/docs/index.html
 import time
 
 def setup(lu_pinno,ll_pinno,ru_pinno,rl_pinno):
