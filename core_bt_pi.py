@@ -2,44 +2,55 @@
 ### DO NOT TOUCH THE CODE UNLESS AUTHORIZED. IF YOU ARE MAKING ANY CHANGES, COMMENT THE CHANGELOG BELOW
 # This code is for the Microprocessors project by Group 41.
 # It involves manually controlling the robot through bluetooth.
-# PINS 33,34(GND),35,36,37,38,39(GND) ARE RESERVED BY GROUP 41. DO NOT CHANGE THE PINS WITHOUT AUTHORIZATION.
 
 import RPi.GPIO as gpio
+## We need to import RPi.GPIO library to access the GPIO pins on the Pi.
 import bluetooth as bt
 import time
 
 def setup(lu_pinno,ll_pinno,ru_pinno,rl_pinno):
+
 	global left_upper,left_lower,right_upper,right_lower
 	left_upper=lu_pinno
 	left_lower=ll_pinno
 	right_upper=ru_pinno
 	right_lower=rl_pinno
+
 	gpio.setmode(gpio.BOARD)
 	gpio.setup(left_upper,gpio.OUT)
 	gpio.setup(left_lower,gpio.OUT)
 	gpio.setup(right_upper,gpio.OUT)
 	gpio.setup(right_lower,gpio.OUT)
+
 	# SET ALL PINS TO LOW FIRST
 	gpio.output(left_upper,gpio.LOW)
 	gpio.output(left_lower,gpio.LOW)
 	gpio.output(right_upper,gpio.LOW)
 	gpio.output(right_lower,gpio.LOW)
+
 	return
 
 def bind_and_listen(sock):
-#	print bt.get_available_port(bt.RFCOMM)
+
 	port = 1
 	sock.bind(("",port))
+	## BLuetooth communication happens through end-points called sockets.
+	## We need to bind the BT socket to a specific port.
+	## sock.bind(("",1)) binds the Bluetooth connection socket to Port 1.
 	print 'The RasPi is now listening to you.'
 	blinky(indicator_pin,3,0.2)
 
 	sock.listen(1)
+	## With listen(1), the socket is now ready to receive incoming connections.
 
 	accept_sock,accept_addr = sock.accept()
+	## Return the socket 'object' from this function
 	return accept_sock
 
 def receive_data(accepted_sock):
+	## Pass the socket 'object' from the previous step.
 	data = accepted_sock.recv(1024)
+	## Receive upto 1024 bytes
 	return data
 
 def move_forward():
@@ -73,6 +84,7 @@ def move_left():
 	gpio.output(right_upper,gpio.HIGH)
 	gpio.output(right_lower,gpio.LOW)
 	return
+
 def stay():
 	global left_upper,left_lower,right_upper,right_lower
 	gpio.output(left_upper,gpio.LOW)
@@ -92,20 +104,28 @@ def vacuum_off():
 	return 
 	
 def move(data):
+	
 	if(data=='f'):
 		move_forward()
+	
 	elif(data=='b'):
 		move_backward()
+	
 	elif(data=='r'):
 		move_right()
+	
 	elif(data=='l'):
 		move_left()
+	
 	elif(data=='s'):
 		stay()
+	
 	elif(data=='v'):
 		vacuum_on()
+	
 	elif(data=='o'):
 		vacuum_off()
+	
 	else:
 		print 'Not a valid command'
 		return
@@ -126,7 +146,12 @@ if __name__ == '__main__':
 	indicator_pin = 33
 	gpio.setup(indicator_pin,gpio.OUT)	
 	socket = bt.BluetoothSocket(bt.RFCOMM)
+        ## We are using RFCOMM protocol here, instead of L2CAP
+        ## This is because we need a reliable data transfer. In real world situations, incorrect data transfer is hazardous.
+        ## More info here - https://people.csail.mit.edu/albert/bluez-intro/x95.html#protocol-table
+	
         accept_details = bind_and_listen(socket)
+        
 	if( accept_details!=None):
 		print 'Connected'
 
