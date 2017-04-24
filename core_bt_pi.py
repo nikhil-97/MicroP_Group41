@@ -10,21 +10,33 @@ import bluetooth as bt
 import time
 
 def setup(lu_pinno,ll_pinno,ru_pinno,rl_pinno):
+	## setup is basically initializing the pins on the Raspberry Pi
+	## We want to tell the Pi that we are using so and so(the pins referred to by lu_pinno,etc.)
 
 	global left_upper,left_lower,right_upper,right_lower
+	## left_upper,left_lower,right_upper,right_lower correspond to the pins on L293D motor driver.
+	## In this pic http://www.rakeshmondal.info/pik/l293d%20pin%20diagram.png ,
+	## left_upper = 2,left_lower = 7,right_upper = 15,right_lower = 10
+	## As you can see, the variables are named according to the location of the pins on the motor driver. 
 	left_upper=lu_pinno
 	left_lower=ll_pinno
 	right_upper=ru_pinno
 	right_lower=rl_pinno
 
 	gpio.setmode(gpio.BOARD)
+	## gpio.setmode tells the Pi what kind of numbering system to use.
+	## See here for more info -- https://raspberrypi.stackexchange.com/a/12967
 	gpio.setup(left_upper,gpio.OUT)
+	## gpio.setup is the main library function which sets up i.e. initializes the pins.
+	## gpio.OUT means telling the Pi we want that pin as OUTPUT.
 	gpio.setup(left_lower,gpio.OUT)
 	gpio.setup(right_upper,gpio.OUT)
 	gpio.setup(right_lower,gpio.OUT)
 
 	# SET ALL PINS TO LOW FIRST
 	gpio.output(left_upper,gpio.LOW)
+	## gpio.output is telling the Pi what kind of output we want on that pin.
+	## gpio.output(left_upper,gpio.LOW) means a digital LOW output on left_upper GPIO pin.
 	gpio.output(left_lower,gpio.LOW)
 	gpio.output(right_upper,gpio.LOW)
 	gpio.output(right_lower,gpio.LOW)
@@ -55,6 +67,7 @@ def receive_data(accepted_sock):
 	return data
 
 def move_forward():
+	## see the working of L293D to understand these functions.
 	global left_upper,left_lower,right_upper,right_lower
 	gpio.output(left_upper,gpio.HIGH)
 	gpio.output(left_lower,gpio.LOW)
@@ -63,6 +76,7 @@ def move_forward():
 	return
 
 def move_backward():
+	
 	global left_upper,left_lower,right_upper,right_lower
 	gpio.output(left_upper,gpio.LOW)
 	gpio.output(left_lower,gpio.HIGH)
@@ -71,6 +85,7 @@ def move_backward():
 	return 
 
 def move_right():
+	
 	global left_upper,left_lower,right_upper,right_lower
 	gpio.output(left_upper,gpio.HIGH)
 	gpio.output(left_lower,gpio.LOW)
@@ -79,6 +94,7 @@ def move_right():
 	return
 
 def move_left():
+	
 	global left_upper,left_lower,right_upper,right_lower
 	gpio.output(left_upper,gpio.LOW)
 	gpio.output(left_lower,gpio.LOW)
@@ -105,7 +121,8 @@ def vacuum_off():
 	return 
 	
 def move(data):
-	
+	## I couldn't find any switch-case in Python till now.
+	## Refer here if needed -- http://stackoverflow.com/a/60236
 	if(data=='f'):
 		move_forward()
 	
@@ -132,6 +149,7 @@ def move(data):
 		return
 
 def blinky(pinno,count,delay):
+	## this function blinks an LED(if connected) at GPIO pin number pinno, for 'count' number of times, with 'delay' milliseconds between high and low
 	if(count==0):
 		return
 	
@@ -140,12 +158,16 @@ def blinky(pinno,count,delay):
 	gpio.output(pinno,gpio.LOW)
 	time.sleep(delay)
 	return blinky(pinno,count-1,delay)
+	## using recursion here ;) :P 
 
 if __name__ == '__main__':
-
+	
 	setup(35,36,37,38)
+	## 33,35,36,37,38 are just the pin numbers on the Raspberry Pi
 	indicator_pin = 33
 	gpio.setup(indicator_pin,gpio.OUT)	
+	## indicator_pin is just to indicate :P , as an alternative to display in command terminal.
+	
 	socket = bt.BluetoothSocket(bt.RFCOMM)
         ## We are using RFCOMM protocol here, instead of L2CAP
         ## This is because we need a reliable data transfer. In real world situations, incorrect data transfer is hazardous.
@@ -164,14 +186,21 @@ if __name__ == '__main__':
 		if(data=='q'):
 			stay()
 			print "Are you sure you want to exit ?"
+			## We want to as kthe user twice before exiting.
 			blinky(indicator_pin,2,0.2)
 			if(receive_data(accept_details)=='q'):
 				blinky(indicator_pin,6,0.15)
 				break
+				## If user doesn't quit second time, the loop goes back to initial state, i.e. working state
 			else:
 				continue
 		else:
 			move(data)
+			## take the data we got above, and pass it to move() function.
+			## move()function handles what to do with the data.
+			## To understand how move() works, read this about L293D motor driver's working -- 
+			## https://www.robotix.in/tutorial/auto/motor_driver/
 	gpio.cleanup()	
+	## we want the Pi to close all the pins and clean up the mess. Not actually necessary, but good practice.
 	exit()
 
