@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 DevicesList currentDevice = devicesList.get(position);
                 String CurrentMacAddress = currentDevice.getMacAddress();
                 thread = new ConnectionThread(CurrentMacAddress, context, BA);
-                ConnectionThreadStatus = thread.sockectConnection();
+                ConnectionThreadStatus = thread.socketConnection();
                if(ConnectionThreadStatus)
                {
                    Intent intent = new Intent(MainActivity.this, ControllerActivity.class);

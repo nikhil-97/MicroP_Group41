@@ -63,7 +63,7 @@ public class ConnectionThread extends Thread implements Serializable
         return  targetDevice;
     }
 
-    public boolean sockectConnection()
+    public boolean socketConnection()
     {
         boolean success;
         // Cancel discovery because it otherwise slows down the connection.

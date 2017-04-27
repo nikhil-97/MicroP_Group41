@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,6 +23,7 @@ public class ControllerActivity extends AppCompatActivity
 {
 
     private ConnectionThread currentThread = MainActivity.thread;
+    private boolean readyToQuit = false;
 //    private OutputStream outputStream;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,14 +44,30 @@ public class ControllerActivity extends AppCompatActivity
     public void move(View v)
     {
         String command = v.getTag().toString();
-        Log.d("Command", command);
         try
         {
             write(command);
         }
         catch (IOException e)
         {
-            Log.e("COMMAND_WRITE", "Could not write to the output stream", e);
+            Toast.makeText(getApplicationContext(), "Problem Sending Data To Pi ", Toast.LENGTH_SHORT).show();
+        }
+        if(command.equals("q"))
+        {
+            if(!readyToQuit)
+            {
+                readyToQuit = true;
+                Toast.makeText(getApplicationContext(), "Press 'quit' again to close connection", Toast.LENGTH_SHORT).show();
+            }
+            else if(readyToQuit)
+            {
+                Toast.makeText(getApplicationContext(), "Connection Closed Successfully ", Toast.LENGTH_SHORT).show();
+                ControllerActivity.this.finish();
+            }
+        }
+        else if(readyToQuit && !command.equals("q"))
+        {
+            readyToQuit = false;
         }
     }
 
