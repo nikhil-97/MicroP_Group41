@@ -9,11 +9,11 @@ import bluetooth as bt
 ## Documentation for this library at - http://htmlpreview.github.io/?https://github.com/karulis/pybluez/blob/master/docs/index.html
 import time
 
-def setup(lu_pinno,ll_pinno,ru_pinno,rl_pinno):
+def setup(lu_pinno,ll_pinno,ru_pinno,rl_pinno,vac_pinno):
 	## setup is basically initializing the pins on the Raspberry Pi
 	## We want to tell the Pi that we are using so and so(the pins referred to by lu_pinno,etc.)
 
-	global left_upper,left_lower,right_upper,right_lower
+	global left_upper,left_lower,right_upper,right_lower,vacuum_pin
 	## left_upper,left_lower,right_upper,right_lower correspond to the pins on L293D motor driver.
 	## In this pic http://www.rakeshmondal.info/pik/l293d%20pin%20diagram.png ,
 	## left_upper = 2,left_lower = 7,right_upper = 15,right_lower = 10
@@ -22,6 +22,7 @@ def setup(lu_pinno,ll_pinno,ru_pinno,rl_pinno):
 	left_lower=ll_pinno
 	right_upper=ru_pinno
 	right_lower=rl_pinno
+	vacuum_pin = vac_pinno
 
 	gpio.setmode(gpio.BOARD)
 	## gpio.setmode tells the Pi what kind of numbering system to use.
@@ -32,6 +33,7 @@ def setup(lu_pinno,ll_pinno,ru_pinno,rl_pinno):
 	gpio.setup(left_lower,gpio.OUT)
 	gpio.setup(right_upper,gpio.OUT)
 	gpio.setup(right_lower,gpio.OUT)
+	gpio.setup(vacuum_pin,gpio.OUT)
 
 	# SET ALL PINS TO LOW FIRST
 	gpio.output(left_upper,gpio.LOW)
@@ -40,6 +42,7 @@ def setup(lu_pinno,ll_pinno,ru_pinno,rl_pinno):
 	gpio.output(left_lower,gpio.LOW)
 	gpio.output(right_upper,gpio.LOW)
 	gpio.output(right_lower,gpio.LOW)
+	gpio.output(vacuum_pin,gpio.LOW)
 
 	return
 
@@ -111,13 +114,15 @@ def stay():
 	return
 
 def vacuum_on():
+	global vacuum_pin
+	gpio.output(vacuum_pin,gpio.HIGH)
 	print 'Vacuum on'
-	#for now
 	return
 
 def vacuum_off():
+	global vacuum_pin
+	gpio.output(vacuum_pin,gpio.LOW)
 	print 'Vacuum off'
-	#for now
 	return 
 	
 def move(data):
@@ -162,9 +167,10 @@ def blinky(pinno,count,delay):
 
 if __name__ == '__main__':
 	
-	setup(35,36,37,38)
+	gpio.setwarnings(False)	
+	setup(35,36,37,38,33)
 	## 33,35,36,37,38 are just the pin numbers on the Raspberry Pi
-	indicator_pin = 33
+	indicator_pin = 40
 	gpio.setup(indicator_pin,gpio.OUT)	
 	## indicator_pin is just to indicate :P , as an alternative to display in command terminal.
 	
@@ -202,5 +208,4 @@ if __name__ == '__main__':
 			## https://www.robotix.in/tutorial/auto/motor_driver/
 	gpio.cleanup()	
 	## we want the Pi to close all the pins and clean up the mess. Not actually necessary, but good practice.
-	exit()
-
+	## exit()
